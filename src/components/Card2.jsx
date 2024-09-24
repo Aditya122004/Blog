@@ -1,11 +1,10 @@
-import blog_img from '../assets/blog_img.jpeg'
 import { Link } from 'react-router-dom'
 // eslint-disable-next-line react/prop-types, no-unused-vars
-function Card2({title,username,blogid,del}) {
+function Card2({title,username,blogid,del,img}) {
   return (
     <div className="w-[300px] rounded-md border">
       <img
-        src={blog_img}
+        src={img}
         alt="image"
         className="h-[200px] w-full rounded-md object-cover"
       />

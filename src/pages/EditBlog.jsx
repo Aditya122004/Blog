@@ -7,8 +7,9 @@ import { useEffect,useState } from 'react';
 function EditBlog() {
   const Navigate=useNavigate()
   const { id } = useParams();
-  const {GetBlog,UpdateBlog}=useFirebase()
-  const [blog,setblog]=useState({})
+  const {GetBlog,UpdateBlog,UploadImage}=useFirebase()
+  const [img,setimg]=useState("")
+  const [pic,setpic]=useState(false)
   const {
     register,
     handleSubmit,
@@ -22,15 +23,26 @@ function EditBlog() {
   useEffect(()=>{
     const fetchblog=async()=>{
         const b=await GetBlog(id)
-        setblog(b)
-        console.log(blog.title,blog.content)
-        reset({title:blog.title,text:blog.content})
+        setimg(b.imageUrl)
+        reset({title:b.title,text:b.content})
       }
       fetchblog()
   },[])
+  const handleImageUpload=async(e)=>{
+    const file=e.target.files[0]
+    if(file){
+      setpic(true)
+      setimg(file)
+    }
+  }
   const click=async(data)=>{
       try{
-        await UpdateBlog(data.title,data.text,id)
+        if(pic){
+          const link=await UploadImage(img)
+          await UpdateBlog(data.title,data.text,id,link)
+        }else{
+          await UpdateBlog(data.title,data.text,id,img)
+        }
         res()
         Navigate('/')
       }catch(err){
@@ -68,6 +80,7 @@ function EditBlog() {
                   Upload Image
                 </label>
                 <input
+                  onChange={handleImageUpload}
                   id="image-upload"
                   type="file"
                   accept="image/*"
@@ -78,6 +91,8 @@ function EditBlog() {
                              file:bg-blue-50 file:text-blue-700
                              hover:file:bg-blue-100"
                 />
+                
+      
               </div>
               <div>
                 <label htmlFor="text-area" className="block text-sm font-medium text-gray-700">

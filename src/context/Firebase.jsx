@@ -1,7 +1,8 @@
 import { createContext } from "react";
 import { createUserWithEmailAndPassword, signInWithEmailAndPassword, signOut } from "firebase/auth"
-import { auth,db } from '../firebase/FirebaseConfig'
+import { auth,db,storage } from '../firebase/FirebaseConfig'
 import  { collection, addDoc,getDocs,query,where,doc,deleteDoc,getDoc,updateDoc } from "firebase/firestore"; 
+import { ref, uploadBytes, getDownloadURL } from "firebase/storage";
 import { useState,useEffect } from "react";
 
 export const FirebaseContext = createContext();
@@ -57,14 +58,15 @@ export const FirebasecontextProvider = ({ children }) => {
       console.log("Error in retreiving username",{e})
     }
   }
-  const AddBlog=async(title,content,username,time,id)=>{
+  const AddBlog=async(title,content,username,time,id,imgID)=>{
     try {
       const docRef = await addDoc(collection(db, "Blog"), {
         user:username,
         title,
         date:time,
         content,
-        id
+        id,
+        imageUrl:imgID
       });
       console.log("Document written with ID: ", docRef.id);
     } catch (e) {
@@ -98,12 +100,13 @@ export const FirebasecontextProvider = ({ children }) => {
       console.log("Error in Fetching data from Firestore",e)
     }
   }
-  const UpdateBlog=async(title,content,bid)=>{
+  const UpdateBlog=async(title,content,bid,imgid)=>{
     try{
       const washingtonRef = doc(db, "Blog", bid);
       await updateDoc(washingtonRef, {
         title,
-        content
+        content,
+        imageUrl:imgid
 });
     }catch(e){
       console.log("Error in Updation",e)
@@ -117,6 +120,18 @@ export const FirebasecontextProvider = ({ children }) => {
       console.log("Error in deletion",e)
     }
   }
+  const UploadImage =async(file)=>{
+      try {
+        const storageRef = ref(storage, 'images/' + file.name);
+        await uploadBytes(storageRef, file);
+        console.log('Uploaded a blob or file!');
+        const downloadURL = await getDownloadURL(storageRef);
+        console.log('File available at', downloadURL);
+        return downloadURL;
+      } catch (error) {
+        console.error("Error uploading image: ", error)
+      }
+}
   
 
   useEffect(() => {
@@ -128,7 +143,7 @@ export const FirebasecontextProvider = ({ children }) => {
 
   return (
     <FirebaseContext.Provider value={{ SignUp, LogIn, SignOut,AddUserName,user,GetUserName,
-    AddBlog,GetBlogs,GetUserBlogs,DeleteBlog,GetBlog,UpdateBlog }}>
+    AddBlog,GetBlogs,GetUserBlogs,DeleteBlog,GetBlog,UpdateBlog,UploadImage }}>
       {children}
     </FirebaseContext.Provider>
   )

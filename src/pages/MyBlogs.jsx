@@ -40,7 +40,7 @@ function MyBlogs() {
     </div>
     <div className='w-11/12 h-100% mx-auto mt-12 grid grid-cols-4 gap-4'>
     {blogs && blogs.map((blog) => (
-  <Card2 key={blog.blogId} content={blog.content} title={blog.title} username={blog.user} date={blog.date} id={blog.id} blogid={blog.blogId} del={handleDelete}/>
+  <Card2 key={blog.blogId} content={blog.content} title={blog.title} username={blog.user} date={blog.date} id={blog.id} blogid={blog.blogId} img={blog.imageUrl} del={handleDelete}/>
 ))}
     </div>
     <Footer/>

@@ -2,9 +2,11 @@ import {useForm} from 'react-hook-form'
 import Navbar from '../components/Navbar';
 import { useFirebase } from '../context/useFirebase';
 import { useNavigate } from 'react-router-dom';
+import { useState } from 'react';
 function AddBlog() {
+  const[img,setimg]=useState("")
   const Navigate=useNavigate()
-  const {user,GetUserName,AddBlog}=useFirebase()
+  const {user,GetUserName,AddBlog,UploadImage}=useFirebase()
   const {
     register,
     handleSubmit,
@@ -23,13 +25,20 @@ function AddBlog() {
           month: 'long',
           year: 'numeric'
         });
+        const link=await UploadImage(img)
         const us=await GetUserName(user.uid)
-        await AddBlog(data.title,data.text,us,formattedDate,user.uid)
+        await AddBlog(data.title,data.text,us,formattedDate,user.uid,link)
         res()
-        Navigate('/')
+       Navigate('/')
       }catch(err){
         console.log(err)
       }
+  }
+  const handleImageUpload=async(e)=>{
+    const file=e.target.files[0]
+    if(file){
+        setimg(file)
+    }
   }
 
   return (
@@ -62,9 +71,11 @@ function AddBlog() {
                   Upload Image
                 </label>
                 <input
+                  onChange={handleImageUpload}
                   id="image-upload"
                   type="file"
                   accept="image/*"
+                  required
                   className="mt-1 block w-full text-sm text-gray-500
                              file:mr-4 file:py-2 file:px-4
                              file:rounded-md file:border-0
@@ -72,6 +83,7 @@ function AddBlog() {
                              file:bg-blue-50 file:text-blue-700
                              hover:file:bg-blue-100"
                 />
+                
               </div>
               <div>
                 <label htmlFor="text-area" className="block text-sm font-medium text-gray-700">

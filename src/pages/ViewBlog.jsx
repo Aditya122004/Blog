@@ -1,5 +1,4 @@
 import { useEffect, useState } from 'react';
-import blog_img from '../assets/blog_img.jpeg'
 import { useFirebase } from '../context/useFirebase';
 import { useParams } from 'react-router-dom';
 import Navbar from '../components/Navbar';
@@ -22,7 +21,7 @@ function ViewBlog() {
     <h1 className="text-4xl font-bold mb-4 text-gray-800">{blog.title}</h1>
     <img
       className="w-full h-auto mb-6 rounded"
-      src={blog_img}
+      src={blog.imageUrl}
       alt="image"
     />
     <div className="text-sm text-gray-600 mb-6">

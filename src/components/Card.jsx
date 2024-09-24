@@ -1,14 +1,14 @@
-import blog_img from '../assets/blog_img.jpeg'
+
 import { Link } from 'react-router-dom'
 // eslint-disable-next-line react/prop-types, no-unused-vars
-function Card({title,username,bid}) {
+function Card({title,username,bid,img}) {
   return (
     <div className="w-[300px] rounded-md border">
-      <img
-        src={blog_img}
-        alt="image"
-        className="h-[200px] w-full rounded-md object-cover"
-      />
+     <img
+  src={img}
+  alt="image"
+  className="h-[200px] w-full max-w-full max-h-full rounded-md object-cover"
+  />
       <div className="p-4">
         <h1 className="text-lg font-semibold">{title}</h1>
         <p className="mt-3 text-sm text-gray-600">

@@ -35,7 +35,7 @@ function Home() {
     </div>
     <div className='w-11/12 h-100% mx-auto mt-12 grid grid-cols-4 gap-4'>
     {blogs && blogs.map((blog) => (
-  <Card key={blog.blogId} content={blog.content} title={blog.title} username={blog.user} date={blog.date} bid={blog.blogId} />
+  <Card key={blog.blogId} content={blog.content} title={blog.title} username={blog.user} date={blog.date} bid={blog.blogId} img={blog.imageUrl} />
 ))}
     </div>
     <Footer/>
